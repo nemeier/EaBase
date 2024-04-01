@@ -7,7 +7,7 @@ This libary encaptulate then most commom features that I use when coding with mi
 
 Clone repositry to a folder in you current libary folder
 
-    git close https://github.com/nemeier/EaBase.git
+    git clone https://github.com/nemeier/EaBase.git
 
 # Demo application (Arduino UNO)
 
