@@ -3,6 +3,12 @@ Basic class libary for Arduino, ESP8266 and ESP32
 
 This libary encaptulate then most commom features that I use when coding with microproessors.
 
+# Installation
+
+Clone repositry to a folder in you current libary folder
+
+    git close https://github.com/nemeier/EaBase.git
+
 # Demo application (Arduino UNO)
 
 	/* Simple program that reads from pin 5 and set pin 6 */
