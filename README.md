@@ -1,5 +1,5 @@
 # EaBase
-Basic class libary for Arduino, ESP8266 and ESP32
+Basic class libary for Arduino UNO, ESP8266 and ESP32
 
 This libary encaptulate then most commom features that I use when coding with microproessors.
 
@@ -20,8 +20,8 @@ Clone repositry to a folder in you current libary folder
 
     EABase eaBase = EABase();
     EABase_ArduinoUNO eaBaseBoard = EABase_ArduinoUNO(&eaBase);
-    EABase_Input eaBase_Switch = EABase_Input(&eaBaseBoard, 5, INPUT_PULLUP, true, 100); // pullup with invert
-    EABase_Output eaBase_LED = EABase_Output(&eaBaseBoard, 6); 
+    EABase_Input eaBase_Switch = EABase_Input(&eaBaseBoard, 5, true, true, 100); // pullup with invert
+    EABase_Output eaBase_LED = EABase_Output(&eaBaseBoard, 6);
 
     void setup()
     {
@@ -38,7 +38,7 @@ Clone repositry to a folder in you current libary folder
 # Demo application (ESP8266 with MCP23017)
 
     /* same reading input from pin 9 on MCP23017 (device id 4) and set pin 5 and ESP8266) */
-	
+
     #include <Wire.h>
     #include "EaBase.h"
     #include "EaBase_NodeMCUv10.h"
@@ -48,9 +48,9 @@ Clone repositry to a folder in you current libary folder
 
     EABase eaBase = EABase();
     EABase_NodeMCUv10 eaBaseBoard = EABase_NodeMCUv10(&eaBase);
-    EaBase_MCP23017 eaMcp23017 = EaBase_MCP23017(EABase_MCP23017(&eaBase, 4);
-    EABase_Input eaBase_Switch = EABase_Input(&EaBase_MCP23017, 9, INPUT_PULLUP, true, 100); // pullup with invert
-    EABase_Output eaBase_LED = EABase_Output(&eaBaseBoard, 5); 
+    EaBase_MCP23017 eaMcp23017 = EABase_MCP23017(&eaBase, 4);
+    EABase_Input eaBase_Switch = EABase_Input(&EaBase_MCP23017, 9, true, true, 100); // pullup with invert
+    EABase_Output eaBase_LED = EABase_Output(&eaBaseBoard, 5);
 
     void setup()
     {
@@ -71,12 +71,33 @@ Clone repositry to a folder in you current libary folder
 uint64_t EABase_PINDATA
 uint8_t EABase_PINNO
 
+## Pin numbers
+
+### Arduino
+
+Arduino pinnumbers are used.
+
+### ESP8266
+
+On ESP8266 Dx-numbers are used, Dx-numbers are printed on the board, just write 1 for D1, 2 for D2 ect. (Don't use D1, D2 ect.)
+
+### ESP32
+
+On ESP32 GPIO numbers are used, GPIO numbers are printed on the board
+
+### List of pinnumbers
+
+__uint8_t PANEL_OutputPins[] = {4, 1, 2, 3, 5};__ /* Lenght, pin1, pin2 ... */
+
+The contains length byte and a list of pinnumber, here 4 pins are reference, pinnumbers 1, 2, 3 and 5.
+
 # EABase (EaBase.h)
 Basic class where all objects are added, this class contains the basic setup and run methon
 
+* __EABase()__
 * void add(EABase_Object *obj)
-* void setup(), call all setup methods in the EABase object structure
-* void loop(), call all loop methods in the EABase object structure
+* __void setup()__, call all setup methods in the EABase object structure
+* __void loop()__, call all loop methods in the EABase object structure
 
 Object contains pointers for list of EA_Base_Objects (classListFirst,classListNext)
 
@@ -95,6 +116,8 @@ Basic structure of a chip, extended from EABase_Object
 
 ## EABase_ChipIO
 Basic abstract structure of a IO chip, extended from EABase_Chip, EABase_Object
+
+### EABase_ChipIO(EABase *eabase) (Constructor)
 
 * EABase_ChipIO(EABase *eabase)
 * virtual uint8_t getPinNo(uint8_t pin)
@@ -115,18 +138,16 @@ Basic abstract structure of a IO chip, extended from EABase_Chip, EABase_Object
 * EABase_PINDATA Output = 0;
 * EABase_PINDATA Invert = 0;
 
-
-### setMode values
-	INPUT
-	INPUT_PULLUP
-
+### setMode value
+false = no pullup
+true = pullup
 
 ## EABase_ArduinoUNO (EaBase_ArduinoUNO.h)
 Implements Arduino UNO board (Can be used for mini as well), extended from EABase_ChipIO
 
-* EABase_ArduinoUNO(EABase *eabase)
-* void setIgnoreI2C()
-* void setIgnoreSPI()
+* __EABase_ArduinoUNO(EABase *eabase)__
+* __void setIgnoreI2C()__
+* __void setIgnoreSPI()__
 * void setup()
 * void loop()
 * uint8_t maxPins()
@@ -140,10 +161,10 @@ Implements Arduino UNO board (Can be used for mini as well), extended from EABas
 ## EABase_NodeMCUv10 (EaBase_NodeMCUv10.h)
 Implements ESP8266 ModeMCU v1.0, extended from EABase_ChipIO
 
+* __EABase_NodeMCUv10(EABase *eabase)__
+* __void setIgnoreI2C(EABase_PINNO SDA, EABase_PINNO SCL)__
+* __void setIgnoreSPI()__
 * uint8_t getPinNo(uint8_t pin)
-* EABase_NodeMCUv10(EABase *eabase)
-* void setIgnoreI2C()
-* void setIgnoreSPI()
 * void setup()
 * void loop()
 * uint8_t maxPins()
@@ -157,10 +178,10 @@ Implements ESP8266 ModeMCU v1.0, extended from EABase_ChipIO
 ## EABase_ESP32Wroom (EaBase_ESP32Wroom.h)
 Implements ESP32 Wroom board (v4), extended from EABase_ChipIO
 
+* __EABase_ESP32Wroom(EABase *eabase)__
+* __void setIgnoreI2C()__
+* __void setIgnoreSPI()__
 * uint8_t getPinNo(uint8_t pin)
-* EABase_NodeMCUv10(EABase *eabase)
-* void setIgnoreI2C()
-* void setIgnoreSPI()
 * void setup()
 * void loop()
 * uint8_t maxPins()
@@ -174,7 +195,7 @@ Implements ESP32 Wroom board (v4), extended from EABase_ChipIO
 ## EABase_MCP23017 (EaBase_MCP23017.h)
 Implements I2C chip MCP23017, extended from EABase_ChipIO
 
-* EABase_MCP23017(EABase *eabase, uint8_t chipAddr)
+* __EABase_MCP23017(EABase *eabase, uint8_t chipAddr)__
 * void setup()
 * void loop()
 * uint8_t maxPins()
@@ -188,7 +209,7 @@ Implements I2C chip MCP23017, extended from EABase_ChipIO
 ## EABase_PCB8574 (EaBase_PCB8574.h)
 Implements I2C check PCB8574, extended from EABase_ChipIO
 
-* EABase_PCB8574(EABase *eabase, uint8_t chipAddr)
+* __EABase_PCB8574(EABase *eabase, uint8_t chipAddr)__
 * void setup()
 * void loop()
 * uint8_t maxPins()
@@ -201,13 +222,13 @@ Implements I2C check PCB8574, extended from EABase_ChipIO
 
 ## EABase_Rotary_KY040 (EABase_Rotary_KY040.h)
 Implements KY040 rotary encoder, extended from public EABase_Object
+* __EABase_Rotary(EABase_ChipIO *Chip, uint8_t pinClk, uint8_t pinData, int minValue, int maxValue, int start, bool rollOver)__
+* __~EABase_Rotary()__
+* __bool HasChanged()__
+* __int Get()__
 * void setup() {}
 * void loop() {}
-* EABase_Rotary(EABase_ChipIO *Chip, uint8_t pinClk, uint8_t pinData, int minValue, int maxValue, int start, bool rollOver)
-* ~EABase_Rotary();
 * void Reset(int minValue, int maxValue, int start, bool rollOver);
-* bool HasChanged()
-* int Get()
 
 Public but secundary informations
 * bool _rollOver = 0;
@@ -223,72 +244,88 @@ Public but secundary informations
 ## EABase_TM1637_4Digit (EaBase_TM1637_4Digit.h)
 Implements TM1637 4 digit display, extended from EABase_Object
 
-* EABase_TM1637(EABase_ChipIO *Chip, uint8_t pinClk, uint8_t pinDIO)
+* __EABase_TM1637(EABase_ChipIO *Chip, uint8_t pinClk, uint8_t pinDIO)__
+* __void SetParm(uint8_t brightness = EABase_TM1637_BRIGHT_TYPICAL, uint8_t SetData = 0x40, uint8_t SetAddr = 0xc0)__
+* __void ClearDisplay()__
+* __void Set(int value)__
+* __void BlinkDigit(unsigned long value)__
+* __void BlinkPoint(unsigned long value)__
 * void setup() {}
 * void loop() {}
-* void SetParm(uint8_t brightness = EABase_TM1637_BRIGHT_TYPICAL, uint8_t SetData = 0x40, uint8_t SetAddr = 0xc0)
-* void ClearDisplay()
-* void Set(int value)
-* void BlinkDigit(unsigned long value)
-* void BlinkPoint(unsigned long value)
 
 ## EABase_Output (EaBase_Output.h)
 Implements a bit for digital output, extended from EABase_Object
 
-* EABase_Output(EABase_ChipIO *Chip, EABase_PINDATA pin)
+* __EABase_Output(EABase_ChipIO *Chip, EABase_PINDATA pin)__
+* __void set(bool value)__
+* __void get()__
 * void setup() {}
 * void loop() {}
-* void set(bool value)
-* void get()
 
 ## EABase_Output (EaBase_OutputBlink.h)
 Implements a bit for a blinking digital output (Not PWM!!), extended from EABase_Object
 
-* EABase_OutputBlink(EABase_ChipIO *Chip, EABase_PINDATA pin)
-* void set(unsigned long value)
+* __EABase_OutputBlink(EABase_ChipIO *Chip, EABase_PINDATA pin)__
+* __void set(unsigned long value)__
 * void setup()
 * void loop() {}
 
 ## EABase_OutputDblBlink (EaBase_OutputDblBlink.h)
 Implements two bits for a blinking digital output (Not PWM!!), extended from EABase_Object
 
-* EABase_OutputDblBlink(EABase_ChipIO *Chip, EABase_PINDATA pin1, EABase_PINDATA pin2)
-* void setTimer(unsigned long value)
-* void setState(uint8_t state)
+* __EABase_OutputDblBlink(EABase_ChipIO *Chip, EABase_PINDATA pin1, EABase_PINDATA pin2)__
+* __void setTimer(unsigned long value)__
+* __void setState(uint8_t state)__
 * void setup() {}
 * void loop() {}
+
+### Parameters for setState
+
+* 0: Blinking handled by the timer
+* 1: Both led is turned Off
+* 2: Led 1 is On, Led 2 is Off
+* 3: Led 1 is Off, Led 2 is On
+* 4: Both led is turned On
 
 ## EABase_OutputList (EaBase_OutputList.h)
 Combine multiple bits as a hex output, extended from EABase_Object
 
-* EABase_OutputList(EABase_ChipIO *Chip, EABase_PINNO *pins)
-* void set(EABase_PINDATA value)
-* EABase_PINDATA get()
+* __EABase_OutputList(EABase_ChipIO *Chip, EABase_PINNO *pins)__
+* __void set(EABase_PINDATA value)__
+* __EABase_PINDATA get()__
 * void setup() {}
 * void loop() {}
 
 ## EABase_Input (EaBase_Input.h)
 Implements a bit for digital input, extended from EABase_Object
 
-* EABase_Input(EABase_ChipIO *Chip, EABase_PINNO pin, bool pullup = false, bool invert = false, uint16_t prelTime = 0)
-* void setPrelTime(uint16_t prelTime)
+* __EABase_Input(EABase_ChipIO *Chip, EABase_PINNO pin, bool pullup = false, bool invert = false, uint16_t prelTime = 0)__
+* __void setPrelTime(uint16_t prelTime)__
+* __bool get()__
 * void setup()
-* bool get()
+
+### Parameters for constructor
+* __Chip__, reference to processor to chip (EaBase_ArduinoUNO, EaBase_ESP32Wroom, EaBase_NodeMCUv10, EaBase_MCP23017 or EABase_PCB8574)
+* __pin__, Pin number
+* __pullup__, Enable pullup (True/False)
+* __invert__, Invert result (True/Flase)
+* __prelTime__, Time to check for prell is miliseconds, default 0 (no check)
+
 
 ## EABase_InputList (EaBase_InputList.h)
 Implements multiple pin read, extended EABase_OutputList
 
-* EABase_InputList(EABase_ChipIO *Chip, EABase_PINNO *pins, bool pullup = false, bool invert = false, uint16_t prelTime = 0)
-* void setPrelTime(uint16_t prelTime)
+* __EABase_InputList(EABase_ChipIO *Chip, EABase_PINNO *pins, bool pullup = false, bool invert = false, uint16_t prelTime = 0)__
+* __void setPrelTime(uint16_t prelTime)__
+* __EABase_PINDATA get()__
 * void setup()
-* EABase_PINDATA get()
 
 ## EABase_KeyPad (EaBase_KeyPad.h)
 Implements a keypad ei. 4x4 keypad, extends EABase_Object
 
-* EABase_KeyPad(EABase_InputList *kbInput, EABase_OutputList *kbOutput, uint8_t *keyPad)
-* bool hasValue()
-* uint8_t value()
+* __EABase_KeyPad(EABase_InputList *kbInput, EABase_OutputList *kbOutput, uint8_t *keyPad)__
+* __bool hasValue()__
+* __uint8_t value()__
 * void setup() {}
 * void loop() {}
 
@@ -308,7 +345,7 @@ Implements a keypad ei. 4x4 keypad, extends EABase_Object
     EABase_ArduinoUNO eaBaseBoard = EABase_ArduinoUNO(&eaBase);
     EaBase_MCP23017 eaMcp23017 = EaBase_MCP23017(EABase_MCP23017(&eaBase, 4);
     EABase_OutputList   PANEL_OutputList = EABase_OutputList(&eaMcp23017, PANEL_OutputPins);
-    EABase_InputList    PANEL_InputList = EABase_InputList(&eaMcp23017, PANEL_InputPins, true, true);
+    EABase_InputList    PANEL_InputList = EABase_InputList(&eaMcp23017, PANEL_InputPins, true, true, 100);
     EABase_KeyPad       PANEL_keypad = EABase_KeyPad(&PANEL_InputList, &PANEL_OutputList, PANEL_keypad_keys);
 
     void setup()
