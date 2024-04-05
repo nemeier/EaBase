@@ -108,7 +108,7 @@ Basic abstract class for implementing object structure
 * virtual void setup()
 * virtual void loop()
 
-## EaBase_Chip.h
+# EaBase_Chip.h
 
 ## EABase_Chip
 Basic structure of a chip, extended from EABase_Object
@@ -222,6 +222,8 @@ Implements I2C check PCB8574, extended from EABase_ChipIO
 
 ## EABase_Rotary_KY040 (EABase_Rotary_KY040.h)
 Implements KY040 rotary encoder, extended from public EABase_Object
+
+***IS ONLY CHECKED ON ESP32***
 * __EABase_Rotary(EABase_ChipIO *Chip, uint8_t pinClk, uint8_t pinData, int minValue, int maxValue, int start, bool rollOver)__
 * __~EABase_Rotary()__
 * __bool HasChanged()__
